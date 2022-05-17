@@ -1,0 +1,4 @@
+{
+    "secondsBetwenCheckingForConfirmations": 2,
+    "autoConfirmMarketTransactions": True
+}
