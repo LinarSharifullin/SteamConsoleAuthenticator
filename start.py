@@ -31,6 +31,7 @@ class Account:
         password = self._get_password()
         self._steam_client.login(self._account_name, password, 
             json.dumps(steam_guard_data))
+        print(f'Logged into account {self._account_name}')
     
     def _get_password(self):
         if self._password == None:
