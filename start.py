@@ -8,7 +8,7 @@ from steampy.guard import generate_one_time_code
 
 
 class Account:
-    def __init__(self, file_name):
+    def __init__(self, file_name, need_session=True):
         self._file_name = file_name
         account_data = self._read_maFile()
         self._shared_secret = account_data['shared_secret']
@@ -17,7 +17,8 @@ class Account:
         self._steam_id = str(account_data['Session']['SteamID'])
         self._password =  account_data['password'] if 'password' \
             in account_data else None
-        self._get_session()
+        if need_session == True:
+            self._get_session()
 
     def _read_maFile(self):
         with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
