@@ -63,6 +63,10 @@ class Account:
     def get_confirmations(self):
         return self._confirmation_executor._get_confirmations()
 
+    def fetch_confirmation_details_page(self, confirmation):
+        return self._confirmation_executor.\
+            _fetch_confirmation_details_page(confirmation)
+
 def get_accounts(files):
     accounts = []
     for file in files:
