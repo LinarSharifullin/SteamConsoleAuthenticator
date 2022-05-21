@@ -3,6 +3,7 @@ import json
 import pickle
 
 from steampy.client import SteamClient
+from steampy.confirmation import ConfirmationExecutor
 
 
 class Account:
@@ -12,7 +13,7 @@ class Account:
         self._shared_secret = account_data['shared_secret']
         self._account_name = account_data['account_name']
         self._identity_secret = account_data['identity_secret']
-        self._steam_id = account_data['Session']['SteamID']
+        self._steam_id = str(account_data['Session']['SteamID'])
         self._password =  account_data['password'] if 'password' \
             in account_data else None
         self._get_session()
@@ -30,6 +31,8 @@ class Account:
         except (FileNotFoundError, EOFError, UserWarning):
             self._login()
             self._pickle_dump()
+        self._confirmation_executor = ConfirmationExecutor(self._identity_secret,
+            self._steam_id, self._steam_client._session)
 
     def _login(self):
         steam_guard_data = {
