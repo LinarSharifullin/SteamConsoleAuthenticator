@@ -60,6 +60,8 @@ class Account:
                 f'Input password for account {self._account_name}: ')
         return self._password
 
+    def get_confirmations(self):
+        return self._confirmation_executor._get_confirmations()
 
 def get_accounts(files):
     accounts = []
