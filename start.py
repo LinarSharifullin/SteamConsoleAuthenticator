@@ -4,6 +4,7 @@ import pickle
 
 from steampy.client import SteamClient
 from steampy.confirmation import ConfirmationExecutor
+from steampy.guard import generate_one_time_code
 
 
 class Account:
@@ -59,6 +60,9 @@ class Account:
             self._password = input(
                 f'Input password for account {self._account_name}: ')
         return self._password
+
+    def generate_one_time_code(self):
+        return generate_one_time_code(self._shared_secret)
 
     def get_confirmations(self):
         return self._confirmation_executor._get_confirmations()
