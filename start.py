@@ -25,7 +25,9 @@ class Account:
     def _get_session(self):
         try:
             self._pickle_load()
-        except (FileNotFoundError, EOFError):
+            if self._steam_client.is_session_alive() == False:
+                raise UserWarning('Session lost')
+        except (FileNotFoundError, EOFError, UserWarning):
             self._login()
             self._pickle_dump()
 
