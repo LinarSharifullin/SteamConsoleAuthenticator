@@ -1,4 +1,4 @@
 {
-    "secondsBetwenCheckingForConfirmations": 2,
+    "secondsBetwenCheckingForConfirmations": 5,
     "autoConfirmMarketTransactions": true
 }
