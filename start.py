@@ -20,6 +20,16 @@ class Account:
         if need_session == True:
             self._get_session()
 
+    def generate_one_time_code(self):
+        return generate_one_time_code(self._shared_secret)
+
+    def get_confirmations(self):
+        return self._confirmation_executor._get_confirmations()
+
+    def fetch_confirmation_details_page(self, confirmation):
+        return self._confirmation_executor.\
+            _fetch_confirmation_details_page(confirmation)
+
     def _read_maFile(self):
         with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
             data = file.read()
@@ -61,16 +71,6 @@ class Account:
             self._password = input(
                 f'Input password for account {self._account_name}: ')
         return self._password
-
-    def generate_one_time_code(self):
-        return generate_one_time_code(self._shared_secret)
-
-    def get_confirmations(self):
-        return self._confirmation_executor._get_confirmations()
-
-    def fetch_confirmation_details_page(self, confirmation):
-        return self._confirmation_executor.\
-            _fetch_confirmation_details_page(confirmation)
 
 def get_accounts(files):
     accounts = []
