@@ -2,8 +2,9 @@ import os
 import json
 import pickle
 
+from bs4 import BeautifulSoup
 from steampy.client import SteamClient
-from steampy.confirmation import ConfirmationExecutor
+from steampy.confirmation import ConfirmationExecutor, Confirmation
 from steampy.guard import generate_one_time_code
 
 
@@ -24,7 +25,12 @@ class Account:
         return generate_one_time_code(self._shared_secret)
 
     def get_confirmations(self):
-        return self._confirmation_executor._get_confirmations()
+        confirmations_page = self._confirmation_executor.\
+            _fetch_confirmations_page()
+        soup = BeautifulSoup(confirmations_page.text, 'html.parser')
+        if soup.select('#mobileconf_empty'):
+            return
+        return self._parse_confirmations(soup)
 
     def fetch_confirmation_details_page(self, confirmation):
         return self._confirmation_executor.\
@@ -71,6 +77,21 @@ class Account:
             self._password = input(
                 f'Input password for account {self._account_name}: ')
         return self._password
+
+    def _parse_confirmations(self, soup):
+        confirmations = []
+        for confirmation_div in soup.select\
+                ('#mobileconf_list .mobileconf_list_entry'):
+            _id = confirmation_div['id']
+            data_confid = confirmation_div['data-confid']
+            data_key = confirmation_div['data-key']
+            confirmation = Confirmation(_id, data_confid, data_key)
+            confirmation.text = [elem 
+                for elem in confirmation_div.findAll(text=True) 
+                if elem != '\n' and elem != ' ']
+            confirmation.data_accept = confirmation_div['data-accept']
+            confirmations.append(confirmation)
+        return confirmations
 
 def get_accounts(files):
     accounts = []
