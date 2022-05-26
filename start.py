@@ -20,7 +20,19 @@ class Account:
             in account_data else None
         self.was_login_executed = False
         if need_session == True:
-            self._get_session()
+            self.get_session()
+
+    def get_session(self):
+        try:
+            self._pickle_load()
+            if self._steam_client.is_session_alive() == False:
+                raise UserWarning('Session lost')
+        except (FileNotFoundError, EOFError, UserWarning):
+            self._login()
+            self._pickle_dump()
+        self._confirmation_executor = ConfirmationExecutor(self._identity_secret,
+            self._steam_id, self._steam_client._session)
+        self.was_login_executed = True
 
     def generate_one_time_code(self):
         return generate_one_time_code(self._shared_secret)
@@ -54,18 +66,6 @@ class Account:
         with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
             data = file.read()
         return json.loads(data)
-
-    def _get_session(self):
-        try:
-            self._pickle_load()
-            if self._steam_client.is_session_alive() == False:
-                raise UserWarning('Session lost')
-        except (FileNotFoundError, EOFError, UserWarning):
-            self._login()
-            self._pickle_dump()
-        self._confirmation_executor = ConfirmationExecutor(self._identity_secret,
-            self._steam_id, self._steam_client._session)
-        self.was_login_executed = True
 
     def _login(self):
         steam_guard_data = {
