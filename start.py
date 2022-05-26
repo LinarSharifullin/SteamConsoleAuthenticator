@@ -3,7 +3,7 @@ import json
 import pickle
 
 from bs4 import BeautifulSoup
-from steampy.client import SteamClient
+from steampy.client import SteamClient, login_required
 from steampy.confirmation import ConfirmationExecutor, Confirmation, Tag
 from steampy.guard import generate_one_time_code
 
@@ -18,12 +18,14 @@ class Account:
         self._steam_id = str(account_data['Session']['SteamID'])
         self._password =  account_data['password'] if 'password' \
             in account_data else None
+        self.was_login_executed = False
         if need_session == True:
             self._get_session()
 
     def generate_one_time_code(self):
         return generate_one_time_code(self._shared_secret)
 
+    @login_required
     def get_confirmations(self):
         confirmations_page = self._confirmation_executor.\
             _fetch_confirmations_page()
@@ -32,10 +34,12 @@ class Account:
             return
         return self._parse_confirmations(soup)
 
+    @login_required
     def fetch_confirmation_details_page(self, confirmation):
         return self._confirmation_executor.\
             _fetch_confirmation_details_page(confirmation)
 
+    @login_required
     def send_confirmation_response(self, confirmation, confirm=True):
         tag = Tag.ALLOW if confirm else Tag.CANCEL
         params = self._confirmation_executor._create_confirmation_params(tag.value)
@@ -61,6 +65,7 @@ class Account:
             self._pickle_dump()
         self._confirmation_executor = ConfirmationExecutor(self._identity_secret,
             self._steam_id, self._steam_client._session)
+        self.was_login_executed = True
 
     def _login(self):
         steam_guard_data = {
@@ -112,7 +117,7 @@ def get_accounts(files):
 
 def router():
     files_from_maFiles = os.listdir('maFiles')
-    accounts = get_accounts(files_from_maFiles)
+    # accounts = get_accounts(files_from_maFiles)
 
 if __name__ == '__main__':
     router()
