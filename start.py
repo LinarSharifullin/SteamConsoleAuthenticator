@@ -4,7 +4,7 @@ import pickle
 
 from bs4 import BeautifulSoup
 from steampy.client import SteamClient
-from steampy.confirmation import ConfirmationExecutor, Confirmation
+from steampy.confirmation import ConfirmationExecutor, Confirmation, Tag
 from steampy.guard import generate_one_time_code
 
 
@@ -35,6 +35,16 @@ class Account:
     def fetch_confirmation_details_page(self, confirmation):
         return self._confirmation_executor.\
             _fetch_confirmation_details_page(confirmation)
+
+    def send_confirmation_response(self, confirmation, confirm=True):
+        tag = Tag.ALLOW if confirm else Tag.CANCEL
+        params = self._confirmation_executor._create_confirmation_params(tag.value)
+        params['op'] = tag.value,
+        params['cid'] = confirmation.data_confid
+        params['ck'] = confirmation.data_key
+        headers = {'X-Requested-With': 'XMLHttpRequest'}
+        return self._steam_client._session.get(self._confirmation_executor.CONF_URL
+            + '/ajaxop', params=params, headers=headers).json()
 
     def _read_maFile(self):
         with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
