@@ -3,8 +3,6 @@ import json
 
 from steamcom.guard import generate_one_time_code as get_2fa
 
-from configuration import *
-
 
 class Account:
     def __init__(self, file_name: str) -> None:
