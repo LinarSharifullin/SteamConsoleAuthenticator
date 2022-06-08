@@ -34,10 +34,13 @@ def one_time_code_menu(accounts: list[Account]) -> None:
     exit = False
     while exit != True:
         print('Write the numeric of the desired account, '
-            'you can several separated by a space')
-        print('Press 0 to return to the main menu')
-        for account_number in range(1, len(accounts)):
-            print(f'{account_number}. {accounts[account_number].username}')
+            'you can several separated by a space:')
+        print('0. To return to the main menu')
+        if len(accounts) == 0:
+            print('You have no accounts, add maFiles')
+        else:
+            for account_number in range(1, len(accounts)):
+                print(f'{account_number}. {accounts[account_number].username}')
         user_response = input('Write: ').split()
         exit = one_time_code_user_response_processing(user_response, accounts)
 
@@ -50,7 +53,7 @@ def one_time_code_user_response_processing(user_response: list[str],
             print(f'{part} not numeric')
         elif int(part) == 0:
             exit = True
-        elif 0 < int(part) <= len(accounts):
+        elif 0 < int(part) <= len(accounts)-1:
             account = accounts[int(part)]
             print(f'{account.username}: {get_2fa(account.shared_secret)}')
         else:
