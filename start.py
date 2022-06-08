@@ -13,8 +13,8 @@ class Account:
         self.identity_secret = account_data['identity_secret']
 
     def _read_maFile(self):
-        folder_with_maFiles = 'maFiles'
-        with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
+        folder = 'maFiles'
+        with open(f'{folder}/{self._file_name}.maFile', 'r') as file:
             data = file.read()
         return json.loads(data)
 
