@@ -1,4 +1,5 @@
 import os
+import json
 
 
 class Account:
@@ -14,6 +15,13 @@ class Account:
         self.was_login_executed = False
         if need_session == True:
             self.get_session()
+
+    def _read_maFile(self):
+        folder_with_maFiles = 'maFiles'
+        with open(f'maFiles/{self._file_name}.maFile', 'r') as file:
+            data = file.read()
+        return json.loads(data)
+
 
 def get_accounts(files):
     accounts = []
