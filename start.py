@@ -3,18 +3,14 @@ import json
 
 
 class Account:
-    def __init__(self, file_name, need_session=True):
+    def __init__(self, file_name):
         self._file_name = file_name
         account_data = self._read_maFile()
-        self._shared_secret = account_data['shared_secret']
-        self._account_name = account_data['account_name']
-        self._identity_secret = account_data['identity_secret']
-        self._steam_id = str(account_data['Session']['SteamID'])
-        self._password =  account_data['password'] if 'password' \
+        self.username = ['account_name']
+        self.password =  account_data['password'] if 'password' \
             in account_data else None
-        self.was_login_executed = False
-        if need_session == True:
-            self.get_session()
+        self.shared_secret = account_data['shared_secret']
+        self.identity_secret = account_data['identity_secret']
 
     def _read_maFile(self):
         folder_with_maFiles = 'maFiles'
