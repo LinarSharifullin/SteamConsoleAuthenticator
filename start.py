@@ -1,6 +1,7 @@
 import os
 import json
 import time
+from typing import Tuple, List
 
 from steamcom.guard import generate_one_time_code as get_2fa
 from steamcom.client import SteamClient
@@ -101,10 +102,83 @@ def ask_for_password(account: Account) -> None:
             'any other character if not: ')
         account.save_password = True if save_password == '1' else False
 
+def auto_confirmations_router(accounts: list[Account]) -> None:
+    exit = False
+    selected_accounts = []
+    while exit == False:
+        if len(selected_accounts) == 0:
+            selected_accounts, exit = select_accounts(accounts)
+        else:
+            check_account_sessions(selected_accounts)
+            exit, sellings, trades = select_auto_confirmations_mode()
+            if exit == False and sellings == True or trades == True:
+                auto_confirmations(selected_accounts, sellings, trades)
+
+def select_accounts(accounts: list[Account]) -> List[Account]:
+    print()
+    print('Write the numeric of the desired account, '
+        'you can several separated by a space:')
+    print('0. Return to the main menu')
+    print('1. To select all')
+    if len(accounts) == 0:
+        print('You have no accounts, add maFiles')
+    else:
+        for account_number in range(1, len(accounts)+1):
+            print(f'{account_number+1}. {accounts[account_number-1].username}')
+        user_response = input('Write: ').split()
+        selected_accounts, exit = select_accounts_user_response_processing(
+            user_response, accounts)
+    return selected_accounts, exit
+
+def select_accounts_user_response_processing(user_response: list[str], 
+        accounts: list[Account]) -> Tuple[list[Account], bool]:
+    exit = False
+    selected_accounts = []
+    for part in user_response:
+        if part.isnumeric() == False:
+            print(f'{part} not numeric')
+            return [], False
+        elif int(part) == 0:
+            return [], True
+        elif int(part) == 1:
+            return accounts, False
+        elif 1 < int(part) <= len(accounts)+1:
+            account = accounts[int(part)-2]
+            selected_accounts.append(account)
+        else:
+            print(f'{part} not found')
+            return [], False
+    return selected_accounts, exit
+
+def select_auto_confirmations_mode() -> Tuple[bool]:
+    exit, sellings, trades = False, False, False
+    print()
+    print('Write the numeric of the desired confirmations:')
+    print('0. Return to the main menu')
+    print('1. Market transactions')
+    print('2. Trades')
+    print('3. Both (market transactions and trades)')
+    user_response = input('Write: ')
+    if '0' == user_response:
+        exit = True
+    elif '3' == user_response:
+        sellings, trades = True, True
+    elif '1' == user_response:
+        sellings = True
+    elif '2' == user_response:
+        trades = True
+    else:
+        print(f'{user_response} - invalid response')
+    return exit, sellings, trades
+
+def auto_confirmations(accounts: list[Account], sellings: bool,
+        trades: bool) -> None:
+    print([i.username for i in accounts], sellings, trades)
+
 def router() -> None:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
-    check_account_sessions(accounts)
+    auto_confirmations_router(accounts)
 
 if __name__ == '__main__':
     router()
