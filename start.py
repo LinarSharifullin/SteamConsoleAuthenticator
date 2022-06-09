@@ -49,6 +49,7 @@ def get_accounts(files: list[str]) -> list[Account]:
 def one_time_code_menu(accounts: list[Account]) -> None:
     exit = False
     while exit != True:
+        print()
         print('Write the numeric of the desired account, '
             'you can several separated by a space:')
         print('0. To return to the main menu')
@@ -74,7 +75,6 @@ def one_time_code_user_response_processing(user_response: list[str],
             print(f'{account.username}: {get_2fa(account.shared_secret)}')
         else:
             print(f'{part} not found')
-    print()
     return exit
 
 def check_account_sessions(accounts: list[Account]) -> None:
@@ -178,7 +178,7 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
 def router() -> None:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
-    auto_confirmations_router(accounts)
+    one_time_code_menu(accounts)
 
 if __name__ == '__main__':
     router()
