@@ -65,6 +65,8 @@ def one_time_code_user_response_processing(user_response: list[str],
         accounts: list[Account]) -> bool:
     exit = False
     print()
+    if user_response == []:
+        print('Empty string received')
     for part in user_response:
         if part.isnumeric() == False:
             print(f'{part} not numeric')
@@ -134,6 +136,8 @@ def select_accounts_user_response_processing(user_response: list[str],
         accounts: list[Account]) -> Tuple[list[Account], bool]:
     exit = False
     selected_accounts = []
+    if user_response == []:
+        print('Empty string received')
     for part in user_response:
         if part.isnumeric() == False:
             print(f'{part} not numeric')
