@@ -52,7 +52,7 @@ def one_time_code_menu(accounts: list[Account]) -> None:
         print()
         print('Write the numeric of the desired account, '
             'you can several separated by a space:')
-        print('0. To return to the main menu')
+        print('0. Return to the main menu')
         if len(accounts) == 0:
             print('You have no accounts, add maFiles')
         else:
