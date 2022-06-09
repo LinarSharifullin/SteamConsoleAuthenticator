@@ -56,8 +56,8 @@ def one_time_code_menu(accounts: list[Account]) -> None:
         if len(accounts) == 0:
             print('You have no accounts, add maFiles')
         else:
-            for account_number in range(1, len(accounts)):
-                print(f'{account_number}. {accounts[account_number].username}')
+            for account_number in range(1, len(accounts)+1):
+                print(f'{account_number}. {accounts[account_number-1].username}')
         user_response = input('Write: ').split()
         exit = one_time_code_user_response_processing(user_response, accounts)
 
@@ -70,8 +70,8 @@ def one_time_code_user_response_processing(user_response: list[str],
             print(f'{part} not numeric')
         elif int(part) == 0:
             exit = True
-        elif 0 < int(part) <= len(accounts)-1:
-            account = accounts[int(part)]
+        elif 0 < int(part) <= len(accounts):
+            account = accounts[int(part)-1]
             print(f'{account.username}: {get_2fa(account.shared_secret)}')
         else:
             print(f'{part} not found')
