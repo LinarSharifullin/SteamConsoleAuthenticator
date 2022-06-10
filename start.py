@@ -43,7 +43,7 @@ def get_accounts(files: list[str]) -> list[Account]:
     accounts = []
     for file in files:
         if '.maFile' in file:
-            accounts.append(Account(file.strip('.maFile')))
+            accounts.append(Account(file.replace('.maFile', '')))
     return accounts
 
 def one_time_code_menu(accounts: list[Account]) -> None:
@@ -222,7 +222,7 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
 def router() -> None:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
-    auto_confirmations_router(accounts)
+    one_time_code_menu(accounts)
 
 if __name__ == '__main__':
     router()
