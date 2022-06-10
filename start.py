@@ -115,6 +115,7 @@ def auto_confirmations_router(accounts: list[Account]) -> None:
             exit, sellings, trades = select_auto_confirmations_mode()
             if exit == False and sellings == True or trades == True:
                 auto_confirmations(selected_accounts, sellings, trades)
+                return
 
 def select_accounts(accounts: list[Account]) -> List[Account]:
     print()
@@ -177,12 +178,51 @@ def select_auto_confirmations_mode() -> Tuple[bool]:
 
 def auto_confirmations(accounts: list[Account], sellings: bool,
         trades: bool) -> None:
-    print([i.username for i in accounts], sellings, trades)
+    print()
+    print('Entered auto-confirmation mode, press CTRL + C to exit in main menu')
+    delay = 7
+    while True:
+        try:
+            for account in accounts:
+                try:
+                    confirmations = account.steam_client.confirmations\
+                        .get_confirmations()
+                except AttributeError:
+                    print('An error occurred while receiving',
+                        'confirmations: AttributeError')
+                if len(confirmations) == 0:
+                    print(f'No confirmations from account {account.username}')
+                    time.sleep(delay)
+                    continue
+                confirmations_for_allow = []
+                print(f'Received {len(confirmations)} confirmations from', 
+                    f'account {account.username}')
+                for confirmation in confirmations:
+                    if sellings == True\
+                            and confirmation.data_accept == 'Create Listing':
+                        confirmations_for_allow.append(confirmation)
+                    elif trades == True\
+                            and confirmation.data_accept == 'Send Offer':
+                        confirmations_for_allow.append(confirmation)
+                if len(confirmations_for_allow) <= 0:
+                    print('No suitable confirmations')
+                    continue
+                status = account.steam_client.confirmations\
+                            .respond_to_confirmations(confirmations_for_allow)
+                if status == True:
+                    print(f'Approved {len(confirmations_for_allow)}', 
+                        'confirmations')
+                else:
+                    print('An error occurred while approving',
+                        f'{len(confirmations_for_allow)} confirmations')
+                time.sleep(delay)
+        except KeyboardInterrupt:
+            return
 
 def router() -> None:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
-    one_time_code_menu(accounts)
+    auto_confirmations_router(accounts)
 
 if __name__ == '__main__':
     router()
