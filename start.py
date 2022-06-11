@@ -180,7 +180,7 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
         trades: bool) -> None:
     print()
     print('Entered auto-confirmation mode, press CTRL + C to exit in main menu')
-    delay = 7
+    delay = 30
     while True:
         try:
             for account in accounts:
@@ -190,6 +190,9 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
                 except AttributeError:
                     print('An error occurred while receiving',
                         'confirmations: AttributeError')
+                except IndexError:
+                    print('An error occurred while receiving',
+                        'confirmations: IndexError')
                 if len(confirmations) == 0:
                     print(f'No confirmations from account {account.username}')
                     time.sleep(delay)
@@ -222,7 +225,7 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
 def router() -> None:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
-    one_time_code_menu(accounts)
+    auto_confirmations_router(accounts)
 
 if __name__ == '__main__':
     router()
