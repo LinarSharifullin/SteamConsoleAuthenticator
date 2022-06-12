@@ -1,6 +1,8 @@
 import time
 from typing import Tuple, List
 
+from steamcom.models import Confirmation, ConfirmationType
+
 from account import Account, check_account_sessions
 
 
@@ -12,9 +14,9 @@ def auto_confirmations_router(accounts: list[Account]) -> None:
             selected_accounts, exit = select_accounts(accounts)
         else:
             check_account_sessions(selected_accounts)
-            exit, sellings, trades = select_auto_confirmations_mode()
-            if exit == False and sellings == True or trades == True:
-                auto_confirmations(selected_accounts, sellings, trades)
+            exit, listings, trades = select_auto_confirmations_mode()
+            if exit == False and listings == True or trades == True:
+                auto_confirmations(selected_accounts, listings, trades)
                 return
 
 def select_accounts(accounts: list[Account]) -> List[Account]:
@@ -56,7 +58,7 @@ def select_accounts_user_response_processing(user_response: list[str],
     return selected_accounts, exit
 
 def select_auto_confirmations_mode() -> Tuple[bool]:
-    exit, sellings, trades = False, False, False
+    exit, listings, trades = False, False, False
     print()
     print('Write the numeric of the desired confirmations:')
     print('0. Return to the main menu')
@@ -67,22 +69,22 @@ def select_auto_confirmations_mode() -> Tuple[bool]:
     if '0' == user_response:
         exit = True
     elif '3' == user_response:
-        sellings, trades = True, True
+        listings, trades = True, True
     elif '1' == user_response:
-        sellings = True
+        listings = True
     elif '2' == user_response:
         trades = True
     else:
         print(f'{user_response} - invalid response')
-    return exit, sellings, trades
+    return exit, listings, trades
 
-def auto_confirmations(accounts: list[Account], sellings: bool,
+def auto_confirmations(accounts: list[Account], listings: bool,
         trades: bool) -> None:
     print()
     print('Entered auto-confirmation mode, press CTRL + C to exit in main menu')
     delay = 30
-    while True:
-        try:
+    try:
+        while True:
             for account in accounts:
                 try:
                     confirmations = account.steam_client.confirmations\
@@ -93,31 +95,35 @@ def auto_confirmations(accounts: list[Account], sellings: bool,
                 except IndexError:
                     print('An error occurred while receiving',
                         'confirmations: IndexError')
-                if len(confirmations) == 0:
-                    print(f'No confirmations from account {account.username}')
-                    time.sleep(delay)
-                    continue
-                confirmations_for_allow = []
-                print(f'Received {len(confirmations)} confirmations from', 
-                    f'account {account.username}')
-                for confirmation in confirmations:
-                    if sellings == True\
-                            and confirmation.data_accept == 'Create Listing':
-                        confirmations_for_allow.append(confirmation)
-                    elif trades == True\
-                            and confirmation.data_accept == 'Send Offer':
-                        confirmations_for_allow.append(confirmation)
-                if len(confirmations_for_allow) <= 0:
-                    print('No suitable confirmations')
-                    continue
-                status = account.steam_client.confirmations\
-                            .respond_to_confirmations(confirmations_for_allow)
-                if status == True:
-                    print(f'Approved {len(confirmations_for_allow)}', 
-                        'confirmations')
-                else:
-                    print('An error occurred while approving',
-                        f'{len(confirmations_for_allow)} confirmations')
+                process_confirmations(confirmations, listings, trades, account)
                 time.sleep(delay)
-        except KeyboardInterrupt:
-            return
+    except KeyboardInterrupt:
+        return
+
+def process_confirmations(confirmations: list[Confirmation], listings: bool,
+        trades: bool, account: Account) -> None:
+    if len(confirmations) == 0:
+        print(f'No confirmations from account {account.username}')
+        return
+    confirmations_for_allow = []
+    print(f'Received {len(confirmations)} confirmations from', 
+        f'account {account.username}')
+    for confirmation in confirmations:
+        if listings == True\
+                and ConfirmationType.create_listing.value\
+                == confirmation.conf_type:
+            confirmations_for_allow.append(confirmation)
+        if trades == True\
+                and ConfirmationType.trade.value == confirmation.conf_type:
+            confirmations_for_allow.append(confirmation)
+    if len(confirmations_for_allow) <= 0:
+        print('No suitable confirmations')
+        return
+    status = account.steam_client.confirmations\
+                .respond_to_confirmations(confirmations_for_allow)
+    if status == True:
+        print(f'Approved {len(confirmations_for_allow)}',
+            'confirmations')
+    else:
+        print('An error occurred while approving',
+            f'{len(confirmations_for_allow)} confirmations')
