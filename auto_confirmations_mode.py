@@ -4,6 +4,7 @@ from typing import Tuple, List
 from steamcom.models import Confirmation, ConfirmationType
 
 from account import Account, check_account_sessions
+from accounts_information_mode import show_accounts, process_accounts_response
 
 
 def auto_confirmations_router(accounts: List[Account]) -> None:
@@ -41,29 +42,6 @@ def auto_confirmations_router(accounts: List[Account]) -> None:
                 auto_confirmations(selected_accounts, listings, trades)
             except KeyboardInterrupt:
                 return
-
-def show_accounts(accounts: List[Account]) -> None:
-    print('\nWrite the numeric of the desired account, '
-        'you can several separated by a space:')
-    print('0. Return to the main menu')
-    print('1. Select all')
-    for account_number in range(2, len(accounts)+2):
-        print(f'{account_number}. {accounts[account_number-2].username}')
-
-def process_accounts_response(user_response: List[str],
-        accounts: List[Account]) -> List[Account]:
-    selected_accounts = []
-    for part in user_response:
-        if part.isnumeric() == False:
-            raise TypeError(f'{part} not numeric')
-        elif int(part) == 1:
-            return accounts
-        elif 1 < int(part) <= len(accounts)+1:
-            account = accounts[int(part)-2]
-            selected_accounts.append(account)
-        else:
-            raise IndexError(f'{part} not found')
-    return selected_accounts
 
 def show_confirmations_mode() -> None:
     print('\nWrite the numeric of the desired confirmations:')
