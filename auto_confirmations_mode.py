@@ -24,7 +24,7 @@ def select_accounts(accounts: list[Account]) -> List[Account]:
     print('Write the numeric of the desired account, '
         'you can several separated by a space:')
     print('0. Return to the main menu')
-    print('1. To select all')
+    print('1. Select all')
     if len(accounts) == 0:
         print('You have no accounts, add maFiles')
     else:
