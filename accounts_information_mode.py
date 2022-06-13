@@ -1,9 +1,11 @@
+from typing import List
+
 from steamcom.guard import generate_one_time_code as get_2fa
 
 from account import Account
 
 
-def one_time_code_menu(accounts: list[Account]) -> None:
+def one_time_code_menu(accounts: List[Account]) -> None:
     exit = False
     while exit != True:
         print()
@@ -15,8 +17,8 @@ def one_time_code_menu(accounts: list[Account]) -> None:
         user_response = input('Write: ').split()
         exit = one_time_code_user_response_processing(user_response, accounts)
 
-def one_time_code_user_response_processing(user_response: list[str], 
-        accounts: list[Account]) -> bool:
+def one_time_code_user_response_processing(user_response: List[str], 
+        accounts: List[Account]) -> bool:
     exit = False
     print()
     if user_response == []:
