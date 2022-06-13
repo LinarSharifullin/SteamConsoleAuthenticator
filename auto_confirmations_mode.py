@@ -6,7 +6,7 @@ from steamcom.models import Confirmation, ConfirmationType
 from account import Account, check_account_sessions
 
 
-def auto_confirmations_router(accounts: list[Account]) -> None:
+def auto_confirmations_router(accounts: List[Account]) -> None:
     exit = False
     selected_accounts = []
     while exit == False:
@@ -32,8 +32,8 @@ def select_accounts(accounts: list[Account]) -> List[Account]:
         user_response, accounts)
     return selected_accounts, exit
 
-def select_accounts_user_response_processing(user_response: list[str], 
-        accounts: list[Account]) -> Tuple[list[Account], bool]:
+def select_accounts_user_response_processing(user_response: List[str], 
+        accounts: List[Account]) -> Tuple[List[Account], bool]:
     exit = False
     selected_accounts = []
     if user_response == []:
@@ -75,7 +75,7 @@ def select_auto_confirmations_mode() -> Tuple[bool]:
         print(f'{user_response} - invalid response')
     return exit, listings, trades
 
-def auto_confirmations(accounts: list[Account], listings: bool,
+def auto_confirmations(accounts: List[Account], listings: bool,
         trades: bool) -> None:
     print()
     print('Entered auto-confirmation mode, press CTRL + C to exit in main menu')
@@ -97,7 +97,7 @@ def auto_confirmations(accounts: list[Account], listings: bool,
     except KeyboardInterrupt:
         return
 
-def process_confirmations(confirmations: list[Confirmation], listings: bool,
+def process_confirmations(confirmations: List[Confirmation], listings: bool,
         trades: bool, account: Account) -> None:
     if len(confirmations) == 0:
         print(f'No confirmations from account {account.username}')
