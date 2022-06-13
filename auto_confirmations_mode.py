@@ -50,7 +50,7 @@ def show_accounts(accounts: List[Account]) -> None:
     for account_number in range(2, len(accounts)+2):
         print(f'{account_number}. {accounts[account_number-2].username}')
 
-def process_accounts_response(user_response: list,
+def process_accounts_response(user_response: List[str],
         accounts: List[Account]) -> List[Account]:
     selected_accounts = []
     for part in user_response:
