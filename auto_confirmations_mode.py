@@ -25,14 +25,11 @@ def select_accounts(accounts: list[Account]) -> List[Account]:
         'you can several separated by a space:')
     print('0. Return to the main menu')
     print('1. Select all')
-    if len(accounts) == 0:
-        print('You have no accounts, add maFiles')
-    else:
-        for account_number in range(1, len(accounts)+1):
-            print(f'{account_number+1}. {accounts[account_number-1].username}')
-        user_response = input('Write: ').split()
-        selected_accounts, exit = select_accounts_user_response_processing(
-            user_response, accounts)
+    for account_number in range(2, len(accounts)+2):
+        print(f'{account_number}. {accounts[account_number-2].username}')
+    user_response = input('Write: ').split()
+    selected_accounts, exit = select_accounts_user_response_processing(
+        user_response, accounts)
     return selected_accounts, exit
 
 def select_accounts_user_response_processing(user_response: list[str], 

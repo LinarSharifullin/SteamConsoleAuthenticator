@@ -10,11 +10,8 @@ def one_time_code_menu(accounts: list[Account]) -> None:
         print('Write the numeric of the desired account, '
             'you can several separated by a space:')
         print('0. Return to the main menu')
-        if len(accounts) == 0:
-            print('You have no accounts, add maFiles')
-        else:
-            for account_number in range(1, len(accounts)+1):
-                print(f'{account_number}. {accounts[account_number-1].username}')
+        for account_number in range(1, len(accounts)+1):
+            print(f'{account_number}. {accounts[account_number-1].username}')
         user_response = input('Write: ').split()
         exit = one_time_code_user_response_processing(user_response, accounts)
 

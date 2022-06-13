@@ -7,9 +7,6 @@ from account import Account, check_account_sessions
 
 def check_confirmations_router(accounts: List[Account]) -> None:
     while True:
-        if len(accounts) == 0:
-            print('\nYou have no accounts, add maFiles')
-            return
         show_accounts(accounts)
         user_response = input('Write: ')
         if user_response == '0':
