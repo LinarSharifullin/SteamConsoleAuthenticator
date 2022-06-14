@@ -1,20 +1,55 @@
 import os
+from typing import List
 
-from account import get_accounts
+from account import get_accounts, Account
 from auto_confirmations_mode import auto_confirmations_router
-from accounts_information_mode import one_time_code_menu
+from accounts_information_mode import accounts_information_router
 from confirmations_mode import check_confirmations_router
 
 
 def router() -> None:
+    while True:
+        try:
+            accounts = upload_accounts()
+        except IndexError as exc:
+            print(f'\n{exc}')
+            return
+        show_menu()
+        user_response = input('Write: ')
+        if user_response == '0':
+            return
+        try:
+            redirect_user(user_response, accounts)
+        except TypeError as exc:
+            print(f'\n{exc}')
+
+def upload_accounts() -> List[Account]:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
     if len(accounts) == 0:
-        print('\nYou have no accounts, add maFiles')
-        return
-    check_confirmations_router(accounts)
-    # one_time_code_menu(accounts)
-    # auto_confirmations_router
+        raise IndexError('You have no accounts, add maFiles')
+    print(f'\n{len(accounts)} accounts uploaded')
+    return accounts
+
+def show_menu() -> None:
+    print('\nWrite the numeric of the desired mode:')
+    print('0. Exit')
+    print('1. Work with confirmations')
+    print('2. Auto-confirmations')
+    print('3. Get 2fa code')
+    print('4. Get account information')
+
+def redirect_user(user_response: str, accounts: List[Account]) -> None:
+    if user_response == '1':
+        check_confirmations_router(accounts)
+    elif user_response == '2':
+        auto_confirmations_router(accounts)
+    elif user_response == '3':
+        accounts_information_router(accounts, False)
+    elif user_response == '4':
+        accounts_information_router(accounts, True)
+    else:
+        raise TypeError(f'{user_response} not found')
 
 
 if __name__ == '__main__':
