@@ -1,5 +1,6 @@
 import json
 import time
+from typing import List
 
 from steamcom.client import SteamClient
 from steamcom.exceptions import SessionIsInvalid
@@ -36,14 +37,14 @@ class Account:
         return json.loads(data)
 
 
-def get_accounts(files: list[str]) -> list[Account]:
+def get_accounts(files: List[str]) -> List[Account]:
     accounts = []
     for file in files:
         if '.maFile' in file:
             accounts.append(Account(file.replace('.maFile', '')))
     return accounts
 
-def check_account_sessions(accounts: list[Account]) -> None:
+def check_account_sessions(accounts: List[Account]) -> None:
     '''Logging in if the session is not valid'''
     delay = 3
     for account in accounts:
