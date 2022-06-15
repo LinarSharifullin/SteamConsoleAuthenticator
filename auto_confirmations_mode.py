@@ -5,6 +5,7 @@ from steamcom.models import Confirmation, ConfirmationType
 
 from account import Account, check_account_sessions
 from accounts_information_mode import show_accounts, process_accounts_response
+from exceptions import UserExit
 
 
 def auto_confirmations_router(accounts: List[Account]) -> None:
@@ -24,7 +25,11 @@ def auto_confirmations_router(accounts: List[Account]) -> None:
             except (TypeError, IndexError) as exc:
                 print(f'\n{exc}')
                 continue
-            check_account_sessions(selected_accounts)
+            try:
+                check_account_sessions(selected_accounts)
+            except UserExit:
+                selected_accounts = []
+                continue
 
         show_confirmations_mode()
         user_response = input('Write: ')

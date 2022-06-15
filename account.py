@@ -3,7 +3,9 @@ import time
 from typing import List
 
 from steamcom.client import SteamClient
-from steamcom.exceptions import SessionIsInvalid
+from steamcom.exceptions import SessionIsInvalid, LoginFailed
+
+from exceptions import UserExit
 
 
 class Account:
@@ -54,12 +56,39 @@ def check_account_sessions(accounts: List[Account]) -> None:
             account.steam_client.load_session(account.session)
             print(f'Account {account.username} session restored')
         except SessionIsInvalid:
-            if account.password == '':
-                ask_for_password(account)
+            print('Saved session is invalid, we login again...')
+            account_login(account)
+        time.sleep(delay)
+
+def account_login(account: Account) -> None:
+    while True:
+        if account.password == '':
+            ask_for_password(account)
+        try:
             account.steam_client.login()
             print(f'Signed in account {account.username}')
             account.update_maFile()
-        time.sleep(delay)
+            return
+        except LoginFailed as exc:
+            login_error_handling(account, exc)
+            
+def login_error_handling(account: Account, exc: LoginFailed) -> None:
+    while True:
+        print(f'\nAn error occurred during login: {exc}')
+        print('0. Back to account selection')
+        print('1. Try again')
+        print('2. Change password')
+        user_response = input('Write: ')
+        if user_response == '0':
+            raise UserExit
+        elif user_response == '1':
+            return
+        elif user_response == '2':
+            account.password = ''
+            account.save_password = False
+            return
+        else:
+            print(f'\n{user_response} not found')
 
 def ask_for_password(account: Account) -> None:
     account.password = input(f'Enter password for account {account.username}: ')

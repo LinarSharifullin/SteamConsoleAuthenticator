@@ -3,6 +3,7 @@ from typing import List
 from steamcom.models import Confirmation
 
 from account import Account, check_account_sessions
+from exceptions import UserExit
 
 
 def check_confirmations_router(accounts: List[Account]) -> None:
@@ -16,7 +17,10 @@ def check_confirmations_router(accounts: List[Account]) -> None:
         except (TypeError, IndexError) as exc:
             print(f'\n{exc}')
             continue
-        check_account_sessions([account])
+        try:
+            check_account_sessions([account])
+        except UserExit:
+            continue
 
         confirmations = show_confirmations(account)
         if len(confirmations) == 0:
