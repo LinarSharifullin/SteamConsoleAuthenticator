@@ -59,7 +59,7 @@ def process_account_response(user_response: str,
 def show_confirmations(account: Account) -> List[Confirmation]:
     confirmations = account.steam_client.confirmations.get_confirmations()
     if len(confirmations) == 0:
-        print('\nYou have no confirmations')
+        print(f'\nNo confirmations from account {account.username}')
         return []
     print('\nWrite the numberic of the confirmation to be approved,',
         'you can specify several, separated by a space,',
