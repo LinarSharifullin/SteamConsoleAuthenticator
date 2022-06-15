@@ -66,7 +66,7 @@ def show_confirmations(account: Account) -> List[Confirmation]:
         print(f'{conf_number}. {confirmations[conf_number-2]}')
     return confirmations
 
-def process_confirmations_response(user_response: list,
+def process_confirmations_response(user_response: List[str],
         confirmations: List[Confirmation]) -> List[Confirmation]:
     selected_confirmations = []
     for part in user_response:
