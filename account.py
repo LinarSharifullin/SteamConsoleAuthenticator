@@ -23,18 +23,16 @@ class Account:
         self.save_password = False
 
     def update_maFile(self) -> None:
-        folder = 'maFiles'
         account_data = self._read_maFile()
         self.session = self.steam_client.extract_session()
         account_data['Session'] = self.session
         if self.save_password == True:
             account_data['password'] = self.password
-        with open(f'{folder}/{self.file_name}.maFile', 'w') as file:
+        with open(f'maFiles/{self.file_name}.maFile', 'w') as file:
             json.dump(account_data, file)
 
     def _read_maFile(self) -> dict:
-        folder = 'maFiles'
-        with open(f'{folder}/{self.file_name}.maFile', 'r') as file:
+        with open(f'maFiles/{self.file_name}.maFile', 'r') as file:
             data = file.read()
         return json.loads(data)
 
