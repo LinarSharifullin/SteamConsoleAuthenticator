@@ -5,6 +5,7 @@ from account import get_accounts, Account
 from auto_confirmations_mode import auto_confirmations_router
 from accounts_information_mode import accounts_information_router
 from confirmations_mode import check_confirmations_router
+from exceptions import UserExit
 
 
 def router() -> None:
@@ -22,6 +23,8 @@ def router() -> None:
             redirect_user(user_response, accounts)
         except TypeError as exc:
             print(f'\n{exc}')
+        except UserExit:
+            continue
 
 def upload_accounts() -> List[Account]:
     files_from_maFiles = os.listdir('maFiles')

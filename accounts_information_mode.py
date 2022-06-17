@@ -3,17 +3,13 @@ from typing import List
 from steamcom.guard import generate_one_time_code as get_2fa
 
 from account import Account
+from exceptions import UserExit
 
 
 def accounts_information_router(accounts: List[Account], full: bool) -> None:
     while True:
         show_accounts(accounts)
         user_response = input('Write: ').split()
-        if '0' in user_response:
-            return
-        elif user_response == []:
-            print('\nEmpty string received')
-            continue
         try:
             selected_accounts = process_accounts_response(user_response,
                 accounts)
@@ -32,6 +28,10 @@ def show_accounts(accounts: List[Account]) -> None:
 
 def process_accounts_response(user_response: List[str],
         accounts: List[Account]) -> List[Account]:
+    if '0' in user_response:
+        raise UserExit
+    elif user_response == []:
+        raise TypeError('Empty string received')
     selected_accounts = []
     for part in user_response:
         if part.isnumeric() == False:

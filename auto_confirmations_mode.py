@@ -9,44 +9,41 @@ from exceptions import UserExit
 
 
 def auto_confirmations_router(accounts: List[Account]) -> None:
-    selected_accounts = []
-    while True:
-        if len(selected_accounts) == 0:
-            show_accounts(accounts)
-            user_response = input('Write: ').split()
-            if '0' in user_response:
-                return
-            elif user_response == []:
-                print('\nEmpty string received')
-                continue
-            try:
-                selected_accounts = process_accounts_response(user_response,
-                    accounts)
-            except (TypeError, IndexError) as exc:
-                print(f'\n{exc}')
-                continue
-            try:
-                check_account_sessions(selected_accounts)
-            except UserExit:
-                selected_accounts = []
-                continue
+    selected_accounts = select_accounts(accounts)
+    listings, trades = select_confirmation_mode()
 
+    try:
+        auto_confirmations(selected_accounts, listings, trades)
+    except KeyboardInterrupt:
+        return
+
+def select_accounts(accounts: List[Account]) -> List[Account]:
+    while True:
+        show_accounts(accounts)
+        user_response = input('Write: ').split()
+        try:
+            selected_accounts = process_accounts_response(user_response,
+                accounts)
+        except (TypeError, IndexError) as exc:
+            print(f'\n{exc}')
+            continue
+        try:
+            check_account_sessions(selected_accounts)
+        except UserExit:
+            continue
+        return selected_accounts
+
+def select_confirmation_mode() -> Tuple[bool]:
+    while True:
         show_confirmations_mode()
         user_response = input('Write: ')
-        if user_response == '0':
-            return
         try:
             listings, trades = process_confirmations_mode_response(
                 user_response)
         except TypeError as exc:
             print(f'\n{exc}')
             continue
-
-        if listings == True or trades == True:
-            try:
-                auto_confirmations(selected_accounts, listings, trades)
-            except KeyboardInterrupt:
-                return
+        return listings, trades
 
 def show_confirmations_mode() -> None:
     print('\nWrite the numeric of the desired confirmations:')
@@ -57,12 +54,14 @@ def show_confirmations_mode() -> None:
 
 def process_confirmations_mode_response(user_response: str) -> Tuple[bool]:
     listings, trades = False, False
-    if '3' == user_response:
-        listings, trades = True, True
+    if user_response == '0':
+        raise UserExit
     elif '1' == user_response:
         listings = True
     elif '2' == user_response:
         trades = True
+    elif '3' == user_response:
+        listings, trades = True, True
     else:
         raise TypeError(f'{user_response} not found')
     return listings, trades
