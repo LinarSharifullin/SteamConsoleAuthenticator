@@ -51,7 +51,7 @@ def auto_confirmations_router(accounts: List[Account]) -> None:
 def show_confirmations_mode() -> None:
     print('\nWrite the numeric of the desired confirmations:')
     print('0. Return to the main menu')
-    print('1. Market transactions')
+    print('1. Market transactions (listings)')
     print('2. Trades')
     print('3. Both (market transactions and trades)')
 
