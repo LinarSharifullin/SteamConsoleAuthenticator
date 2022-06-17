@@ -10,6 +10,7 @@ from exceptions import UserExit
 
 def router() -> None:
     while True:
+        print('\nSteam Console Authenticator 🐭')
         try:
             accounts = upload_accounts()
         except IndexError as exc:
@@ -31,7 +32,7 @@ def upload_accounts() -> List[Account]:
     accounts = get_accounts(files_from_maFiles)
     if len(accounts) == 0:
         raise IndexError('You have no accounts, add maFiles')
-    print(f'\n{len(accounts)} accounts uploaded')
+    print(f'{len(accounts)} accounts uploaded')
     return accounts
 
 def show_menu() -> None:
