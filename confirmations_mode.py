@@ -8,10 +8,13 @@ from exceptions import UserExit
 
 def check_confirmations_router(accounts: List[Account]) -> None:
     while True:
+        account = select_account(accounts)
+        work_with_confirmations(account)
+
+def select_account(accounts: List[Account]) -> Account:
+    while True:
         show_accounts(accounts)
         user_response = input('Write: ')
-        if user_response == '0':
-            return
         try:
             account = process_account_response(user_response, accounts)
         except (TypeError, IndexError) as exc:
@@ -21,15 +24,14 @@ def check_confirmations_router(accounts: List[Account]) -> None:
             check_account_sessions([account])
         except UserExit:
             continue
+        return account
 
+def work_with_confirmations(account: Account) -> None:
+    while True:
         confirmations = show_confirmations(account)
         if len(confirmations) == 0:
-            continue
-        user_response = input('Write: ').split()
-        if '0' in user_response:
             return
-        elif user_response == []:
-            continue
+        user_response = input('Write: ').split()
         try:
             selected_confirmations = process_confirmations_response(
                 user_response,confirmations)
@@ -38,7 +40,7 @@ def check_confirmations_router(accounts: List[Account]) -> None:
             continue
         if len(selected_confirmations) > 0:
             allow_confirmations(account, selected_confirmations)
-
+        return
 
 def show_accounts(accounts: List[Account]) -> None:
         print('\nWrite the numeric of the desired account:')
@@ -48,6 +50,8 @@ def show_accounts(accounts: List[Account]) -> None:
 
 def process_account_response(user_response: str,
         accounts: List[Account]) -> Account:
+    if user_response == '0':
+        raise UserExit
     if user_response.isnumeric() == False:
         raise TypeError(f'{user_response} not numeric')
     elif 0 < int(user_response) <= len(accounts):
@@ -72,6 +76,8 @@ def show_confirmations(account: Account) -> List[Confirmation]:
 
 def process_confirmations_response(user_response: List[str],
         confirmations: List[Confirmation]) -> List[Confirmation]:
+    if '0' in user_response:
+        raise UserExit
     selected_confirmations = []
     for part in user_response:
         if part.isnumeric() == False:
