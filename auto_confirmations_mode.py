@@ -6,6 +6,8 @@ from steamcom.models import Confirmation, ConfirmationType
 from account import Account, check_account_sessions
 from accounts_information_mode import show_accounts, process_accounts_response
 from exceptions import UserExit
+from configuration import (delay_between_check_confirmations,
+    delay_before_allow_confirmations)
 
 
 def auto_confirmations_router(accounts: List[Account]) -> None:
@@ -70,13 +72,13 @@ def auto_confirmations(accounts: List[Account], listings: bool,
         trades: bool) -> None:
     print('\nEntered auto-confirmation mode, press CTRL + C',
         'to exit in main menu')
-    delay = 30
     while True:
         for account in accounts:
             try:
                 confirmations = account.steam_client.confirmations\
                     .get_confirmations()
                 if len(confirmations) > 0:
+                    time.sleep(delay_before_allow_confirmations)
                     process_confirmations(confirmations, listings,
                         trades, account)
                 else:
@@ -84,7 +86,7 @@ def auto_confirmations(accounts: List[Account], listings: bool,
             except (AttributeError, IndexError) as exc:
                 print('An error occurred while receiving',
                     f'confirmations: {exc}')
-            time.sleep(delay)
+            time.sleep(delay_between_check_confirmations)
 
 def process_confirmations(confirmations: List[Confirmation], listings: bool,
         trades: bool, account: Account) -> None:

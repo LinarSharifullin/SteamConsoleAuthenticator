@@ -6,6 +6,7 @@ from steamcom.client import SteamClient
 from steamcom.exceptions import SessionIsInvalid, LoginFailed
 
 from exceptions import UserExit
+from configuration import delay_between_check_account_sessions
 
 
 class Account:
@@ -46,7 +47,6 @@ def get_accounts(files: List[str]) -> List[Account]:
 
 def check_account_sessions(accounts: List[Account]) -> None:
     '''Logging in if the session is not valid'''
-    delay = 3
     for account in accounts:
         if account.steam_client.was_login_executed == True:
             continue
@@ -56,7 +56,7 @@ def check_account_sessions(accounts: List[Account]) -> None:
         except SessionIsInvalid:
             print('Saved session is invalid, we login again...')
             account_login(account)
-        time.sleep(delay)
+        time.sleep(delay_between_check_account_sessions)
 
 def account_login(account: Account) -> None:
     while True:
