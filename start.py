@@ -19,6 +19,7 @@ def router() -> None:
         show_menu()
         user_response = input('Write: ')
         if user_response == '0':
+            print('\nBye bye')
             return
         try:
             redirect_user(user_response, accounts)

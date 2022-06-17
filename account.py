@@ -6,7 +6,7 @@ from steamcom.client import SteamClient
 from steamcom.exceptions import SessionIsInvalid, LoginFailed
 
 from exceptions import UserExit
-from configuration import delay_between_check_account_sessions
+from configuration import delay_between_check_account_sessions, save_password
 
 
 class Account:
@@ -21,7 +21,9 @@ class Account:
         self.session = account_data['Session']
         self.steam_client = SteamClient(self.username, self.password,
             self.shared_secret, self.identity_secret)
-        self.save_password = False
+        self.save_password = True if save_password == 'yes' else False
+        self.ask_about_password_saving = True if save_password == 'ask'\
+            else False
 
     def update_maFile(self) -> None:
         account_data = self._read_maFile()
@@ -64,8 +66,9 @@ def account_login(account: Account) -> None:
             ask_for_password(account)
         try:
             account.steam_client.login()
-            print(f'Signed in account {account.username}')
+            print(f'Logged into the {account.username} account')
             account.update_maFile()
+            print(f'Updated maFile from account {account.username}')
             return
         except LoginFailed as exc:
             login_error_handling(account, exc)
@@ -83,7 +86,6 @@ def login_error_handling(account: Account, exc: LoginFailed) -> None:
             return
         elif user_response == '2':
             account.password = ''
-            account.save_password = False
             return
         else:
             print(f'\n{user_response} not found')
@@ -91,7 +93,7 @@ def login_error_handling(account: Account, exc: LoginFailed) -> None:
 def ask_for_password(account: Account) -> None:
     account.password = input(f'Enter password for account {account.username}: ')
     account.steam_client.password = account.password
-    if account.save_password == False:
+    if account.ask_about_password_saving == True:
         save_password = input('Save password in maFile? Write 1 if yes,'
             'any other character if not: ')
         account.save_password = True if save_password == '1' else False
