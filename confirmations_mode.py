@@ -26,9 +26,9 @@ def select_account(accounts: List[Account]) -> Account:
             continue
         return account
 
-def work_with_confirmations(account: Account) -> None:
+def work_with_confirmations(account: Account, flag_mode: bool=False) -> None:
     while True:
-        confirmations = show_confirmations(account)
+        confirmations = show_confirmations(account, flag_mode)
         if len(confirmations) == 0:
             return
         user_response = input('Write: ').split()
@@ -60,7 +60,7 @@ def process_account_response(user_response: str,
     else:
         raise IndexError(f'{user_response} not found')
 
-def show_confirmations(account: Account) -> List[Confirmation]:
+def show_confirmations(account: Account, flag_mode: bool) -> List[Confirmation]:
     confirmations = account.steam_client.confirmations.get_confirmations()
     if len(confirmations) == 0:
         print(f'\nNo confirmations from account {account.username}')
@@ -68,7 +68,8 @@ def show_confirmations(account: Account) -> List[Confirmation]:
     print('\nWrite the numberic of the confirmation to be approved,',
         'you can specify several, separated by a space,',
         'or leave it blank if nothing needs to be confirmed:')
-    print('0. Return to the main menu')
+    exit_text = '0. Return to the main menu' if flag_mode == False else '0. Exit'
+    print(exit_text)
     print('1. Select all')
     for conf_number in range(2, len(confirmations)+2):
         print(f'{conf_number}. {confirmations[conf_number-2]}')
