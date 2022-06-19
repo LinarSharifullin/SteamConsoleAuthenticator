@@ -64,7 +64,7 @@ def find_accounts_by_usernames(usernames: List[str],
 def args_confirmations_router(username: str,
         accounts: List[Account]) -> None:
     selected_accounts = find_accounts_by_usernames([username], accounts)
-    check_account_sessions(selected_accounts)
+    check_account_sessions(selected_accounts[0:1])
     try:
         work_with_confirmations(selected_accounts[0], True)
     except UserExit:
