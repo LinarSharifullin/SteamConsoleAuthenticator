@@ -85,7 +85,7 @@ def auto_confirmations(accounts: List[Account], listings: bool,
                     print(f'No confirmations from account {account.username}')
             except (AttributeError, IndexError) as exc:
                 print('An error occurred while receiving',
-                    f'confirmations: {exc}')
+                    f'confirmations: {type(exc).__name__}: {exc.args[0]}')
             time.sleep(delay_between_check_confirmations)
 
 def process_confirmations(confirmations: List[Confirmation], listings: bool,
