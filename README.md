@@ -56,7 +56,6 @@ Received 3 confirmations from account schierke
 No suitable confirmations
 ```
 
-
 You can write only parts usernames, and the command will be executed with the accounts, whose usernames contain any of these parts
 ```console
 [linar@fedora SteamConsoleAuthenticator]$ python start.py -a account -m both
