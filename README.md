@@ -9,7 +9,9 @@ Interact with confirmations, get two-factor confirmation codes, get other data f
 3. Open the terminal in the directory with the Steam Console Authenticator and write `pip install -r requirements.txt
 
 # Usage
-Just set you maFiles in the `maFiles` folder (⚠️ please use copy of these files, in theory the program may lose them) and run `start.py` in the terminal in the directory with the Steam Console Authenticator. In `configuration.py` there are settings, you can take a look, I tried to make them very simple and clear
+Just set you maFiles in the `maFiles` folder (⚠️ please use copy of these files, in theory the program may lose them) and run `python start.py` in the terminal in the directory with the Steam Console Authenticator. In `configuration.py` there are settings, you can take a look, I tried to make them very simple and clear
 
 ## Flags
 With the help of flags, you can skip the main menu and immediately perform the desired action
+
+*
