@@ -14,7 +14,7 @@ Just set you maFiles in the `maFiles` folder (⚠️ please use copy of these fi
 ## Flags
 With the help of flags, you can skip the main menu and immediately perform the desired action
 
-**--confirmations (-c) username**
+### --confirmations (-c) username
 Calls the menu for working with confirmations
 ```console
 [linar@fedora SteamConsoleAuthenticator]$ python start.py -c schierke
@@ -29,7 +29,7 @@ Write the numberic of the confirmation to be approved, you can specify several, 
 Write: 
 ```
 
-You can write only part еру username, and the command will be executed with the first login containing this part
+You can write only part username, and the command will be executed with the first account, whose username containing this part
 ```console
 [linar@fedora SteamConsoleAuthenticator]$ python start.py -c schi
 Account schierke session restored
@@ -41,5 +41,28 @@ Write the numberic of the confirmation to be approved, you can specify several, 
 3. Confirmation: Sell - IDF
 4. Confirmation: Sell - Anarchist (Foil)
 Write: 
+```
 
+### --auto-confirmations (-a) [list usernames] / --mode (-m) {listings, trades, both}
+the --auto-confirmations flag must necessarily be with --mode. This start auto-confirmations
+```console
+[linar@fedora SteamConsoleAuthenticator]$ python start.py -a ken_kaneki schierke -m trades
+Account ken_kaneki session restored
+Account schierke session restored
+
+Entered auto-confirmation mode, press CTRL + C to exit
+No confirmations from account ken_kaneki
+Received 3 confirmations from account schierke
+No suitable confirmations
+```
+
+
+You can write only parts usernames, and the command will be executed with the accounts, whose usernames contain any of these parts
+```console
+[linar@fedora SteamConsoleAuthenticator]$ python start.py -a account -m both
+Account account1 session restored
+Account account2 session restored
+Account account3 session restored
+
+Entered auto-confirmation mode, press CTRL + C to exit
 ```
