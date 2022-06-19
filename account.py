@@ -56,7 +56,8 @@ def check_account_sessions(accounts: List[Account]) -> None:
             account.steam_client.load_session(account.session)
             print(f'Account {account.username} session restored')
         except SessionIsInvalid:
-            print('Saved session is invalid, we login again...')
+            print(f'Saved session account {account.username} is invalid,',
+                'we login again...')
             account_login(account)
         if accounts[-1] != account:
             time.sleep(delay_between_check_account_sessions)
