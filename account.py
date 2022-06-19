@@ -58,7 +58,8 @@ def check_account_sessions(accounts: List[Account]) -> None:
         except SessionIsInvalid:
             print('Saved session is invalid, we login again...')
             account_login(account)
-        time.sleep(delay_between_check_account_sessions)
+        if accounts[-1] != account:
+            time.sleep(delay_between_check_account_sessions)
 
 def account_login(account: Account) -> None:
     while True:
