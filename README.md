@@ -14,4 +14,32 @@ Just set you maFiles in the `maFiles` folder (⚠️ please use copy of these fi
 ## Flags
 With the help of flags, you can skip the main menu and immediately perform the desired action
 
-*
+**--confirmations (-c) username**
+Calls the menu for working with confirmations
+```console
+[linar@fedora SteamConsoleAuthenticator]$ python start.py -c schierke
+Account schierke session restored
+
+Write the numberic of the confirmation to be approved, you can specify several, separated by a space, or leave it blank if nothing needs to be confirmed:
+0. Exit
+1. Select all
+2. Confirmation: Sell - Balkan
+3. Confirmation: Sell - IDF
+4. Confirmation: Sell - Anarchist (Foil)
+Write: 
+```
+
+You can write only part еру username, and the command will be executed with the first login containing this part
+```console
+[linar@fedora SteamConsoleAuthenticator]$ python start.py -c schi
+Account schierke session restored
+
+Write the numberic of the confirmation to be approved, you can specify several, separated by a space, or leave it blank if nothing needs to be confirmed:
+0. Exit
+1. Select all
+2. Confirmation: Sell - Balkan
+3. Confirmation: Sell - IDF
+4. Confirmation: Sell - Anarchist (Foil)
+Write: 
+
+```
