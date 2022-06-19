@@ -1,93 +1,13 @@
-import argparse
 import os
 from typing import List
 
-from account import get_accounts, Account, check_account_sessions
-from auto_confirmations_mode import (auto_confirmations_router,
-    auto_confirmations)
-from accounts_information_mode import (accounts_information_router,
-    show_accounts_data)
-from confirmations_mode import (check_confirmations_router,
-    work_with_confirmations)
+from account import get_accounts, Account
+from auto_confirmations_mode import auto_confirmations_router
+from accounts_information_mode import accounts_information_router
+from confirmations_mode import check_confirmations_router
 from exceptions import UserExit
+from args_router import args_router
 
-
-def args_router(accounts: List[Account]) -> None:
-    args = get_args()
-    if args.confirmations != None:
-        selected_accounts = find_accounts_by_usernames([args.confirmations],
-            accounts)
-        check_account_sessions(selected_accounts)
-        try:
-            work_with_confirmations(selected_accounts[0], True)
-        except UserExit:
-            quit()
-    elif args.auto_confirmations != None:
-        if args.mode == None:
-            raise TypeError(f'--mode (-m) not specified')
-        if args.auto_confirmations[0] == []:
-            selected_accounts = accounts
-        else:
-            selected_accounts = find_accounts_by_usernames(
-                args.auto_confirmations[0], accounts)
-        check_account_sessions(selected_accounts)
-        listings = False if args.mode == 'trades' else True
-        trades = False if args.mode == 'listings' else True
-        try:
-            auto_confirmations(selected_accounts, listings, trades)
-        except KeyboardInterrupt:
-            quit()
-    elif args.information != None:
-        if args.information[0] == []:
-            selected_accounts = accounts
-        else:
-            selected_accounts = find_accounts_by_usernames(
-                args.information[0], accounts)
-        show_accounts_data(selected_accounts, args.full)
-    quit()
-
-def get_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--confirmations',
-        metavar='username',
-        help='Return confirmations and a menu for working with them'
-    )
-    parser.add_argument('-a', '--auto-confirmations',
-        nargs='*',
-        action='append',
-        metavar='list usernames',
-        help='Auto-allow the necessary confirmations, selected in --mode (-m)'
-    )
-    parser.add_argument('-m', '--mode',
-        choices=['listings', 'trades', 'both'],
-        metavar='{just one thing: listings, trades or both}',
-        help='Type confirmations, need for --auto-confirmations (-a)'
-    )
-    parser.add_argument('-i', '--information',
-        nargs='*',
-        action='append',
-        metavar='list usernames',
-        help='Show 2fa codes selected accounts'
-    )
-    parser.add_argument('-f', '--full', 
-        action='store_true',
-        help='In addition to the 2fa code, show full information from maFile')
-    return parser.parse_args()
-
-def find_accounts_by_usernames(usernames: List[str],
-        accounts: List[Account]) -> List[Account]:
-    selected_accounts = []
-    for username in usernames:
-        found = False
-        for account in accounts:
-            print(username.lower(), account.username.lower())
-            if username.lower() in account.username.lower():
-                selected_accounts.append(account)
-                found = True
-                break
-        if found == False:
-            raise TypeError(f'{username} not found')
-    return selected_accounts
 
 def router(accounts: List[Account]) -> None:
     print(f'\n{len(accounts)} accounts uploaded')

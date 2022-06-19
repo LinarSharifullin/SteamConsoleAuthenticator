@@ -69,9 +69,9 @@ def process_confirmations_mode_response(user_response: str) -> Tuple[bool]:
     return listings, trades
 
 def auto_confirmations(accounts: List[Account], listings: bool,
-        trades: bool) -> None:
-    print('\nEntered auto-confirmation mode, press CTRL + C',
-        'to exit in main menu')
+        trades: bool, flag_mode: bool=False) -> None:
+    exit_text = 'to exit in main menu' if flag_mode == False else 'to exit'
+    print('\nEntered auto-confirmation mode, press CTRL + C', exit_text)
     while True:
         for account in accounts:
             try:
