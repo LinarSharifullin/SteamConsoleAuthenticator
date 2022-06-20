@@ -9,7 +9,7 @@ Interact with confirmations, get two-factor confirmation codes, get other data f
 # Installation
 1. Install [python](https://python.org), don't forget to check the box in the "Add python to PATH"
 2. Download Steam Console Authenticator ([download link](https://github.com/LinarSharifullin/SteamConsoleAuthenticator/archive/refs/heads/main.zip)) and unpack the archive into a convenient directory
-3. Open the terminal in the directory with the Steam Console Authenticator and write `pip install -r requirements.txt
+3. Open the terminal in the directory with the Steam Console Authenticator and write `pip install -r requirements.txt`
 
 # Usage
 Just set you maFiles in the `maFiles` folder (⚠️ please use copy of these files, in theory the program may lose them) and run `python start.py` in the terminal in the directory with the Steam Console Authenticator
