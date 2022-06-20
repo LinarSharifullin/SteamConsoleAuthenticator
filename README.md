@@ -1,5 +1,7 @@
 # Steam Console Authenticator 🐭
-![Steam Console Authenticator main menu](https://user-images.githubusercontent.com/48877848/174481036-6e34b9fa-cfb0-46bd-af25-8ecc687c643f.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/48877848/174516452-c8ddebcc-250b-4c9f-afc5-9638c1e7d8a2.png" alt="Steam Console Authenticator main menu">
+</p>
 
 Interact with confirmations, get two-factor confirmation codes, get other data from accounts directly from the console. Unfortunately, at the moment it is possible to work only with accounts that already have mafiles, new accounts cannot be installed 🙄
 
