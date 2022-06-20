@@ -1,4 +1,5 @@
 # Steam Console Authenticator 🐭
+<sup><b>This program not associated with Valve Corp</b></sup>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/48877848/174516452-c8ddebcc-250b-4c9f-afc5-9638c1e7d8a2.png" alt="Steam Console Authenticator main menu">
 </p>
