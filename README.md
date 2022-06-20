@@ -70,3 +70,17 @@ Account account3 session restored
 
 Entered auto-confirmation mode, press CTRL + C to exit
 ```
+
+If you do not specify any username, the program will launch all accounts
+```console
+[linar@fedora SteamConsoleAuthenticator]$ python start.py -a -m listings
+Account ken_kaneki session restored
+Account account1 session restored
+Account account2 session restored
+Account account3 session restored
+Account schierke session restored
+
+Entered auto-confirmation mode, press CTRL + C to exit
+```
+
+### --information (-i) [list usernames] + --full (-f)
