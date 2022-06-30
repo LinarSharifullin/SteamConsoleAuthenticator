@@ -1,16 +1,15 @@
 import time
-from typing import Tuple, List
 
-from steamcom.models import Confirmation, ConfirmationType
+from steamcom.models import ConfirmationType
 
-from account import Account, check_account_sessions
+from account import check_account_sessions
 from accounts_information_mode import show_accounts, process_accounts_response
 from exceptions import UserExit
 from configuration import (delay_between_check_confirmations,
     delay_before_allow_confirmations)
 
 
-def auto_confirmations_router(accounts: List[Account]) -> None:
+def auto_confirmations_router(accounts):
     selected_accounts = select_accounts(accounts)
     listings, trades = select_confirmation_mode()
 
@@ -19,7 +18,7 @@ def auto_confirmations_router(accounts: List[Account]) -> None:
     except KeyboardInterrupt:
         return
 
-def select_accounts(accounts: List[Account]) -> List[Account]:
+def select_accounts(accounts):
     while True:
         show_accounts(accounts)
         user_response = input('Write: ').split()
@@ -35,7 +34,7 @@ def select_accounts(accounts: List[Account]) -> List[Account]:
             continue
         return selected_accounts
 
-def select_confirmation_mode() -> Tuple[bool]:
+def select_confirmation_mode():
     while True:
         show_confirmations_mode()
         user_response = input('Write: ')
@@ -47,14 +46,14 @@ def select_confirmation_mode() -> Tuple[bool]:
             continue
         return listings, trades
 
-def show_confirmations_mode() -> None:
+def show_confirmations_mode():
     print('\nWrite the numeric of the desired confirmations:')
     print('0. Return to the main menu')
     print('1. Market transactions (listings)')
     print('2. Trades')
     print('3. Both (market transactions and trades)')
 
-def process_confirmations_mode_response(user_response: str) -> Tuple[bool]:
+def process_confirmations_mode_response(user_response):
     listings, trades = False, False
     if user_response == '0':
         raise UserExit
@@ -68,8 +67,7 @@ def process_confirmations_mode_response(user_response: str) -> Tuple[bool]:
         raise TypeError(f'{user_response} not found')
     return listings, trades
 
-def auto_confirmations(accounts: List[Account], listings: bool,
-        trades: bool, flag_mode: bool=False) -> None:
+def auto_confirmations(accounts, listings, trades, flag_mode=False):
     exit_text = 'to exit in main menu' if flag_mode == False else 'to exit'
     print('\nEntered auto-confirmation mode, press CTRL + C', exit_text)
     while True:
@@ -88,8 +86,7 @@ def auto_confirmations(accounts: List[Account], listings: bool,
                     f'confirmations: {type(exc).__name__}: {exc.args[0]}')
             time.sleep(delay_between_check_confirmations)
 
-def process_confirmations(confirmations: List[Confirmation], listings: bool,
-        trades: bool, account: Account) -> None:
+def process_confirmations(confirmations, listings, trades, account):
     print(f'Received {len(confirmations)} confirmations from', 
         f'account {account.username}')
     confirmations_for_allow = []

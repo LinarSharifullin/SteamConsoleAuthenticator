@@ -1,14 +1,13 @@
 import argparse
-from typing import List
 
-from account import check_account_sessions, Account
+from account import check_account_sessions
 from auto_confirmations_mode import auto_confirmations
 from accounts_information_mode import show_accounts_data
 from confirmations_mode import work_with_confirmations
 from exceptions import UserExit
 
 
-def args_router(accounts: List[Account]) -> None:
+def args_router(accounts):
     args = get_args()
     if args.confirmations != None:
         args_confirmations_router(args.confirmations, accounts) 
@@ -20,7 +19,7 @@ def args_router(accounts: List[Account]) -> None:
     elif args.information != None:
         args_information_router(args.information, args.full, accounts) 
 
-def get_args() -> argparse.Namespace:
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--confirmations',
         metavar='username',
@@ -48,8 +47,7 @@ def get_args() -> argparse.Namespace:
         help='In addition to the 2fa code, show full information from maFile')
     return parser.parse_args()
 
-def find_accounts_by_usernames(usernames: List[str],
-        accounts: List[Account]) -> List[Account]:
+def find_accounts_by_usernames(usernames, accounts):
     selected_accounts = []
     for username in usernames:
         found = False
@@ -61,8 +59,7 @@ def find_accounts_by_usernames(usernames: List[str],
             raise TypeError(f'{username} not found')
     return selected_accounts
 
-def args_confirmations_router(username: str,
-        accounts: List[Account]) -> None:
+def args_confirmations_router(username, accounts):
     selected_accounts = find_accounts_by_usernames([username], accounts)
     check_account_sessions(selected_accounts[0:1])
     try:
@@ -71,8 +68,7 @@ def args_confirmations_router(username: str,
         quit()
     quit()
 
-def args_auto_confirmations_router(usernames: List[List[str]],
-        mode: str, accounts: List[Account]) -> None:
+def args_auto_confirmations_router(usernames, mode, accounts):
     if len(usernames[0]) == 0:
         selected_accounts = accounts
     else:
@@ -86,8 +82,7 @@ def args_auto_confirmations_router(usernames: List[List[str]],
         quit()
     quit()
 
-def args_information_router(usernames: List[List[str]], full: bool,
-            accounts: List[Account]) -> None:
+def args_information_router(usernames, full, accounts):
     if len(usernames[0]) == 0:
         selected_accounts = accounts
     else:

@@ -1,6 +1,5 @@
 import json
 import time
-from typing import List
 
 from steamcom.client import SteamClient
 from steamcom.exceptions import SessionIsInvalid, LoginFailed
@@ -10,7 +9,7 @@ from configuration import delay_between_check_account_sessions, save_password
 
 
 class Account:
-    def __init__(self, file_name: str) -> None:
+    def __init__(self, file_name):
         self.file_name = file_name
         account_data = self._read_maFile()
         self.username = account_data['account_name']
@@ -25,7 +24,7 @@ class Account:
         self.ask_about_password_saving = True if save_password == 'ask'\
             else False
 
-    def update_maFile(self) -> None:
+    def update_maFile(self):
         account_data = self._read_maFile()
         self.session = self.steam_client.extract_session()
         account_data['Session'] = self.session
@@ -40,14 +39,14 @@ class Account:
         return json.loads(data)
 
 
-def get_accounts(files: List[str]) -> List[Account]:
+def get_accounts(files):
     accounts = []
     for file in files:
         if '.maFile' in file:
             accounts.append(Account(file.replace('.maFile', '')))
     return accounts
 
-def check_account_sessions(accounts: List[Account]) -> None:
+def check_account_sessions(accounts):
     '''Logging in if the session is not valid'''
     for account in accounts:
         if account.steam_client.was_login_executed == True:
@@ -62,7 +61,7 @@ def check_account_sessions(accounts: List[Account]) -> None:
         if accounts[-1] != account:
             time.sleep(delay_between_check_account_sessions)
 
-def account_login(account: Account) -> None:
+def account_login(account):
     while True:
         if account.password == '':
             ask_for_password(account)
@@ -75,7 +74,7 @@ def account_login(account: Account) -> None:
         except LoginFailed as exc:
             login_error_handling(account, exc)
             
-def login_error_handling(account: Account, exc: LoginFailed) -> None:
+def login_error_handling(account, exc):
     while True:
         print(f'\nAn error occurred during login: {exc}')
         print('0. Back to account selection')
@@ -92,7 +91,7 @@ def login_error_handling(account: Account, exc: LoginFailed) -> None:
         else:
             print(f'\n{user_response} not found')
 
-def ask_for_password(account: Account) -> None:
+def ask_for_password(account):
     account.password = input(f'Enter password for account {account.username}: ')
     account.steam_client.password = account.password
     if account.ask_about_password_saving == True:

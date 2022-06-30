@@ -1,12 +1,9 @@
-from typing import List
-
 from steamcom.guard import generate_one_time_code as get_2fa
 
-from account import Account
 from exceptions import UserExit
 
 
-def accounts_information_router(accounts: List[Account], full: bool) -> None:
+def accounts_information_router(accounts, full):
     while True:
         show_accounts(accounts)
         user_response = input('Write: ').split()
@@ -18,7 +15,7 @@ def accounts_information_router(accounts: List[Account], full: bool) -> None:
             continue
         show_accounts_data(selected_accounts, full)
 
-def show_accounts(accounts: List[Account]) -> None:
+def show_accounts(accounts):
     print('\nWrite the numeric of the desired account, '
         'you can several separated by a space:')
     print('0. Return to the main menu')
@@ -26,8 +23,7 @@ def show_accounts(accounts: List[Account]) -> None:
     for account_number in range(2, len(accounts)+2):
         print(f'{account_number}. {accounts[account_number-2].username}')
 
-def process_accounts_response(user_response: List[str],
-        accounts: List[Account]) -> List[Account]:
+def process_accounts_response(user_response, accounts):
     if '0' in user_response:
         raise UserExit
     elif user_response == []:
@@ -45,7 +41,7 @@ def process_accounts_response(user_response: List[str],
             raise IndexError(f'{part} not found')
     return selected_accounts
 
-def show_accounts_data(accounts: List[Account], full: bool = False):
+def show_accounts_data(accounts, full = False):
     for account in accounts:
         print(f'\nUsername: {account.username}')
         if full == True:

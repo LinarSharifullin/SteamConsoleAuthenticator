@@ -1,17 +1,13 @@
-from typing import List
-
-from steamcom.models import Confirmation
-
-from account import Account, check_account_sessions
+from account import check_account_sessions
 from exceptions import UserExit
 
 
-def check_confirmations_router(accounts: List[Account]) -> None:
+def check_confirmations_router(accounts):
     while True:
         account = select_account(accounts)
         work_with_confirmations(account)
 
-def select_account(accounts: List[Account]) -> Account:
+def select_account(accounts):
     while True:
         show_accounts(accounts)
         user_response = input('Write: ')
@@ -26,7 +22,7 @@ def select_account(accounts: List[Account]) -> Account:
             continue
         return account
 
-def work_with_confirmations(account: Account, flag_mode: bool=False) -> None:
+def work_with_confirmations(account, flag_mode=False):
     while True:
         confirmations = show_confirmations(account, flag_mode)
         if len(confirmations) == 0:
@@ -42,14 +38,13 @@ def work_with_confirmations(account: Account, flag_mode: bool=False) -> None:
             allow_confirmations(account, selected_confirmations)
         return
 
-def show_accounts(accounts: List[Account]) -> None:
+def show_accounts(accounts):
         print('\nWrite the numeric of the desired account:')
         print('0. Return to the main menu')
         for account_number in range(1, len(accounts)+1):
             print(f'{account_number}. {accounts[account_number-1].username}')
 
-def process_account_response(user_response: str,
-        accounts: List[Account]) -> Account:
+def process_account_response(user_response, accounts):
     if user_response == '0':
         raise UserExit
     if user_response.isnumeric() == False:
@@ -60,7 +55,7 @@ def process_account_response(user_response: str,
     else:
         raise IndexError(f'{user_response} not found')
 
-def show_confirmations(account: Account, flag_mode: bool) -> List[Confirmation]:
+def show_confirmations(account, flag_mode):
     confirmations = account.steam_client.confirmations.get_confirmations()
     if len(confirmations) == 0:
         print(f'\nNo confirmations from account {account.username}')
@@ -75,8 +70,7 @@ def show_confirmations(account: Account, flag_mode: bool) -> List[Confirmation]:
         print(f'{conf_number}. {confirmations[conf_number-2]}')
     return confirmations
 
-def process_confirmations_response(user_response: List[str],
-        confirmations: List[Confirmation]) -> List[Confirmation]:
+def process_confirmations_response(user_response, confirmations):
     if '0' in user_response:
         raise UserExit
     selected_confirmations = []
@@ -92,8 +86,7 @@ def process_confirmations_response(user_response: List[str],
             raise IndexError(f'{part} not found')
     return selected_confirmations
 
-def allow_confirmations(account: Account,
-        confirmations: List[Confirmation]) -> None:
+def allow_confirmations(account, confirmations):
     status = account.steam_client.confirmations\
         .respond_to_confirmations(confirmations)
     if status == True:
