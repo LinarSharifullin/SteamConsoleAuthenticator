@@ -93,13 +93,11 @@ def process_confirmations(confirmations: List[Confirmation], listings: bool,
     print(f'Received {len(confirmations)} confirmations from', 
         f'account {account.username}')
     confirmations_for_allow = []
-    create_listing_value = ConfirmationType.create_listing.value
-    trades_value = ConfirmationType.trade.value
     for confirmation in confirmations:
         conf_type = confirmation.conf_type
-        if listings == True and create_listing_value == conf_type:
+        if listings == True and ConfirmationType.CREATE_LISTING == conf_type:
             confirmations_for_allow.append(confirmation)
-        if trades == True and trades_value == conf_type:
+        if trades == True and ConfirmationType.TRADE == conf_type:
             confirmations_for_allow.append(confirmation)
     if len(confirmations_for_allow) <= 0:
         print('No suitable confirmations')
