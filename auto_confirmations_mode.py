@@ -1,8 +1,9 @@
 import time
 
+from requests.exceptions import InvalidSchema
 from steamcom.models import ConfirmationType
 
-from account import check_account_sessions
+from account import check_account_sessions, account_login
 from accounts_information_mode import show_accounts, process_accounts_response
 from exceptions import UserExit
 from configuration import (delay_between_check_confirmations,
@@ -84,6 +85,9 @@ def auto_confirmations(accounts, listings, trades, flag_mode=False):
             except (AttributeError, IndexError) as exc:
                 print('An error occurred while receiving',
                     f'confirmations: {type(exc).__name__}: {exc.args[0]}')
+            except InvalidSchema:
+                print('Account 2 lost connection, log in again...')
+                account_login(account)
             time.sleep(delay_between_check_confirmations)
 
 def process_confirmations(confirmations, listings, trades, account):
