@@ -76,7 +76,7 @@ def account_login(account, flag_mode=False):
             
 def login_error_handling(account, exc, flag_mode=False):
     while True:
-        print(f'\nAn error occurred during login: {exc}')
+        print(f'\nAn error occurred during login in {account.username}: {exc}')
         exit_text = 'Back to account selection' if flag_mode == False else 'Exit'
         print('0.', exit_text)
         print('1. Try again')
