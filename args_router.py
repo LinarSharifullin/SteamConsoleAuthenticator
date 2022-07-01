@@ -57,7 +57,7 @@ def find_accounts_by_usernames(usernames, accounts):
                 found = True
         if found == False:
             raise TypeError(f'Account {username} not found')
-    return set(selected_accounts)
+    return list(set(selected_accounts))
 
 def args_confirmations_router(username, accounts):
     selected_accounts = find_accounts_by_usernames([username], accounts)
