@@ -5,7 +5,8 @@ from steamcom.client import SteamClient
 from steamcom.exceptions import SessionIsInvalid, LoginFailed
 
 from exceptions import UserExit
-from configuration import delay_between_check_account_sessions, save_password
+from configuration import (delay_between_check_account_sessions,
+                            save_password, login_attempts)
 
 
 class Account:
@@ -23,6 +24,7 @@ class Account:
         self.save_password = True if save_password == 'yes' else False
         self.ask_about_password_saving = True if save_password == 'ask'\
             else False
+        self.login_attempts = login_attempts
 
     def update_maFile(self):
         account_data = self._read_maFile()
@@ -72,7 +74,12 @@ def account_login(account, flag_mode=False):
             print(f'Updated maFile from account {account.username}')
             return
         except LoginFailed as exc:
-            login_error_handling(account, exc, flag_mode)
+            if account.login_attempts > 0\
+                    and 'Captcha' not in str(exc)\
+                    and 'name or password' not in str(exc):
+                account.login_attempts -= 1
+            else:
+                login_error_handling(account, exc, flag_mode)
             
 def login_error_handling(account, exc, flag_mode=False):
     while True:
