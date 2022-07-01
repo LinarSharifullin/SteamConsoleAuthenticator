@@ -59,5 +59,9 @@ if __name__ == '__main__':
     except IndexError as exc:
         print(f'\n{exc}')
         quit()
-    args_router(accounts)
+    try:
+        args_router(accounts)
+    except TypeError as exc:
+        print(exc)
+        exit()
     router(accounts)
