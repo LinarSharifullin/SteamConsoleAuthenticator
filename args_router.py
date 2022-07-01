@@ -61,7 +61,7 @@ def find_accounts_by_usernames(usernames, accounts):
 
 def args_confirmations_router(username, accounts):
     selected_accounts = find_accounts_by_usernames([username], accounts)
-    check_account_sessions(selected_accounts[0:1])
+    check_account_sessions(selected_accounts[0:1], True)
     try:
         work_with_confirmations(selected_accounts[0], True)
     except UserExit:
@@ -73,7 +73,7 @@ def args_auto_confirmations_router(usernames, mode, accounts):
         selected_accounts = accounts
     else:
         selected_accounts = find_accounts_by_usernames(usernames[0], accounts)
-    check_account_sessions(selected_accounts)
+    check_account_sessions(selected_accounts, True)
     listings = False if mode == 'trades' else True
     trades = False if mode == 'listings' else True
     try:

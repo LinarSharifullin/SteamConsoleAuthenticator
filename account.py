@@ -46,7 +46,7 @@ def get_accounts(files):
             accounts.append(Account(file.replace('.maFile', '')))
     return accounts
 
-def check_account_sessions(accounts):
+def check_account_sessions(accounts, flag_mode=False):
     '''Logging in if the session is not valid'''
     for account in accounts:
         if account.steam_client.was_login_executed == True:
@@ -57,11 +57,11 @@ def check_account_sessions(accounts):
         except SessionIsInvalid:
             print(f'Saved session account {account.username} is invalid,',
                 'we login again...')
-            account_login(account)
+            account_login(account, flag_mode)
         if accounts[-1] != account:
             time.sleep(delay_between_check_account_sessions)
 
-def account_login(account):
+def account_login(account, flag_mode=False):
     while True:
         if account.password == '':
             ask_for_password(account)
@@ -72,16 +72,19 @@ def account_login(account):
             print(f'Updated maFile from account {account.username}')
             return
         except LoginFailed as exc:
-            login_error_handling(account, exc)
+            login_error_handling(account, exc, flag_mode)
             
-def login_error_handling(account, exc):
+def login_error_handling(account, exc, flag_mode=False):
     while True:
         print(f'\nAn error occurred during login: {exc}')
-        print('0. Back to account selection')
+        exit_text = 'Back to account selection' if flag_mode == False else 'Exit'
+        print('0.', exit_text)
         print('1. Try again')
         print('2. Change password')
         user_response = input('Write: ')
         if user_response == '0':
+            if flag_mode:
+                exit('\nBye bye')
             raise UserExit
         elif user_response == '1':
             return
