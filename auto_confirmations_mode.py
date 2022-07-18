@@ -92,7 +92,8 @@ def auto_confirmations(accounts, listings, trades, flag_mode=False):
                 print('An error occurred while receiving',
                       f'confirmations: {type(exc).__name__}: {exc.args[0]}')
             except InvalidSchema:
-                print('Account 2 lost connection, log in again...')
+                print(f'Account {account.username} lost connection,',
+                      'log in again...')
                 try:
                     account_login_router(account, flag_mode)
                 except UserExit:
