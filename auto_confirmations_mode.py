@@ -94,6 +94,7 @@ def auto_confirmations(accounts, listings, trades, flag_mode=False):
             except InvalidSchema:
                 print(f'Account {account.username} lost connection,',
                       'log in again...')
+                account.steam_client.was_login_executed = False
                 try:
                     account_login_router(account, flag_mode)
                 except UserExit:
