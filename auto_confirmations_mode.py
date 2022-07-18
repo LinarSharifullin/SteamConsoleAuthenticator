@@ -3,7 +3,7 @@ import time
 from requests.exceptions import InvalidSchema
 from steamcom.models import ConfirmationType
 
-from account import check_account_sessions, account_login
+from account import check_account_sessions, account_login_router
 from accounts_information_mode import show_accounts, process_accounts_response
 from exceptions import UserExit
 from configuration import (
@@ -92,7 +92,7 @@ def auto_confirmations(accounts, listings, trades, flag_mode=False):
                       f'confirmations: {type(exc).__name__}: {exc.args[0]}')
             except InvalidSchema:
                 print('Account 2 lost connection, log in again...')
-                account_login(account)
+                account_login_router(account)
             time.sleep(delay_between_check_confirmations)
 
 
