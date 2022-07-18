@@ -73,8 +73,8 @@ def args_confirmations_router(username, accounts):
     try:
         work_with_confirmations(selected_accounts[0], True)
     except UserExit:
-        quit()
-    quit()
+        exit('\nBye bye')
+    exit()
 
 
 def args_auto_confirmations_router(usernames, mode, accounts):
@@ -88,7 +88,7 @@ def args_auto_confirmations_router(usernames, mode, accounts):
     try:
         auto_confirmations(selected_accounts, listings, trades, True)
     except KeyboardInterrupt:
-        quit()
+        exit()
 
 
 def args_information_router(usernames, full, accounts):
@@ -97,4 +97,4 @@ def args_information_router(usernames, full, accounts):
     else:
         selected_accounts = find_accounts_by_usernames(usernames[0], accounts)
     show_accounts_data(selected_accounts, full)
-    quit()
+    exit()

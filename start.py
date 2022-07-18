@@ -61,7 +61,7 @@ if __name__ == '__main__':
         accounts = upload_accounts()
     except IndexError as exc:
         print(f'\n{exc}')
-        quit()
+        exit()
     try:
         args_router(accounts)
     except TypeError as exc:
