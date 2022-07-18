@@ -1,4 +1,4 @@
-save_password = 'ask' # options: 'yes', 'no', 'ask'
+save_password = 'ask'  # options: 'yes', 'no', 'ask'
 login_attempts = 3
 
 # delays in seconds

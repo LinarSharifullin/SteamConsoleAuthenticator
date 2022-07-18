@@ -9,43 +9,50 @@ from exceptions import UserExit
 
 def args_router(accounts):
     args = get_args()
-    if args.confirmations != None:
-        args_confirmations_router(args.confirmations, accounts) 
-    elif args.auto_confirmations != None:
-        if args.mode == None:
-            raise TypeError(f'--mode (-m) not specified')
-        args_auto_confirmations_router(args.auto_confirmations, args.mode,
-            accounts)
-    elif args.information != None:
-        args_information_router(args.information, args.full, accounts) 
+    if args.confirmations is not None:
+        args_confirmations_router(args.confirmations, accounts)
+    elif args.auto_confirmations is not None:
+        if args.mode is None:
+            raise TypeError('--mode (-m) not specified')
+        args_auto_confirmations_router(args.auto_confirmations,
+                                       args.mode, accounts)
+    elif args.information is not None:
+        args_information_router(args.information, args.full, accounts)
+
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--confirmations',
+    parser.add_argument(
+        '-c', '--confirmations',
         metavar='username',
         help='Return confirmations and a menu for working with them'
     )
-    parser.add_argument('-a', '--auto-confirmations',
+    parser.add_argument(
+        '-a', '--auto-confirmations',
         nargs='*',
         action='append',
         metavar='list usernames',
         help='Auto-allow the necessary confirmations, selected in --mode (-m)'
     )
-    parser.add_argument('-m', '--mode',
+    parser.add_argument(
+        '-m', '--mode',
         choices=['listings', 'trades', 'both'],
         metavar='{just one thing: listings, trades or both}',
         help='Type confirmations, need for --auto-confirmations (-a)'
     )
-    parser.add_argument('-i', '--information',
+    parser.add_argument(
+        '-i', '--information',
         nargs='*',
         action='append',
         metavar='list usernames',
         help='Show 2fa codes selected accounts'
     )
-    parser.add_argument('-f', '--full', 
+    parser.add_argument(
+        '-f', '--full',
         action='store_true',
         help='In addition to the 2fa code, show full information from maFile')
     return parser.parse_args()
+
 
 def find_accounts_by_usernames(usernames, accounts):
     selected_accounts = []
@@ -55,9 +62,10 @@ def find_accounts_by_usernames(usernames, accounts):
             if username.lower() in account.username.lower():
                 selected_accounts.append(account)
                 found = True
-        if found == False:
+        if found is False:
             raise TypeError(f'Account {username} not found')
     return list(set(selected_accounts))
+
 
 def args_confirmations_router(username, accounts):
     selected_accounts = find_accounts_by_usernames([username], accounts)
@@ -67,6 +75,7 @@ def args_confirmations_router(username, accounts):
     except UserExit:
         quit()
     quit()
+
 
 def args_auto_confirmations_router(usernames, mode, accounts):
     if len(usernames[0]) == 0:
@@ -80,7 +89,7 @@ def args_auto_confirmations_router(usernames, mode, accounts):
         auto_confirmations(selected_accounts, listings, trades, True)
     except KeyboardInterrupt:
         quit()
-    quit()
+
 
 def args_information_router(usernames, full, accounts):
     if len(usernames[0]) == 0:

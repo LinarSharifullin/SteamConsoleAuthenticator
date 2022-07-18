@@ -25,12 +25,14 @@ def router(accounts: List[Account]) -> None:
         except UserExit:
             continue
 
+
 def upload_accounts() -> List[Account]:
     files_from_maFiles = os.listdir('maFiles')
     accounts = get_accounts(files_from_maFiles)
     if len(accounts) == 0:
         raise IndexError('You have no accounts, add maFiles')
     return accounts
+
 
 def show_menu() -> None:
     print('\nWrite the numeric of the desired mode:')
@@ -39,6 +41,7 @@ def show_menu() -> None:
     print('2. Auto-confirmations')
     print('3. Get 2fa code')
     print('4. Get account information')
+
 
 def redirect_user(user_response: str, accounts: List[Account]) -> None:
     if user_response == '1':
