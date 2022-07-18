@@ -11,13 +11,14 @@ from configuration import (
 
 
 def auto_confirmations_router(accounts):
-    selected_accounts = select_accounts(accounts)
-    listings, trades = select_confirmation_mode()
+    while True:
+        selected_accounts = select_accounts(accounts)
+        listings, trades = select_confirmation_mode()
 
-    try:
-        auto_confirmations(selected_accounts, listings, trades)
-    except KeyboardInterrupt:
-        return
+        try:
+            auto_confirmations(selected_accounts, listings, trades)
+        except KeyboardInterrupt:
+            return
 
 
 def select_accounts(accounts):
@@ -92,7 +93,10 @@ def auto_confirmations(accounts, listings, trades, flag_mode=False):
                       f'confirmations: {type(exc).__name__}: {exc.args[0]}')
             except InvalidSchema:
                 print('Account 2 lost connection, log in again...')
-                account_login_router(account)
+                try:
+                    account_login_router(account, flag_mode)
+                except UserExit:
+                    return
             time.sleep(delay_between_check_confirmations)
 
 
