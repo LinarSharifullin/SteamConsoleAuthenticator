@@ -68,17 +68,20 @@ def check_account_sessions(accounts, flag_mode=False):
 
 
 def account_login_router(account, flag_mode=False):
-    if account.password == '':
-        ask_for_password(account)
-    try:
-        account_login(account)
-    except LoginFailed as exc:
-        login_error_handling(account, exc, flag_mode)
+    while True:
+        if account.password == '':
+            ask_for_password(account)
+        try:
+            account_login(account)
+            return
+        except LoginFailed as exc:
+            login_error_handling(account, exc, flag_mode)
 
 
 @retry(LoginFailed, tries=login_attempts,
        delay=delay_between_check_account_sessions)
 def account_login(account):
+    print(f'Attempt to log in to account {account.username}')
     account.steam_client.login()
     print(f'Logged into the {account.username} account')
     account.update_maFile()
