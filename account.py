@@ -74,7 +74,7 @@ def account_login_router(account, flag_mode=False):
         try:
             account_login(account)
             return
-        except LoginFailed as exc:
+        except (LoginFailed, KeyError) as exc:
             login_error_handling(account, exc, flag_mode)
 
 
