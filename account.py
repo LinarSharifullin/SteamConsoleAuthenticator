@@ -117,5 +117,5 @@ def ask_for_password(account):
     account.steam_client.password = account.password
     if account.ask_about_password_saving:
         save_password = input('Save password in maFile? Write 1 if yes,'
-                              'any other character if not: ')
+                              ' any other character if not: ')
         account.save_password = True if save_password == '1' else False
