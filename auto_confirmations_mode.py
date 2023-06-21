@@ -107,7 +107,7 @@ def process_confirmations(confirmations, listings, trades, account):
           f'account {account.username}')
     confirmations_for_allow = []
     for confirmation in confirmations:
-        conf_type = confirmation.conf_type
+        conf_type = confirmation.type
         if listings and ConfirmationType.CREATE_LISTING == conf_type:
             confirmations_for_allow.append(confirmation)
         if trades and ConfirmationType.TRADE == conf_type:
