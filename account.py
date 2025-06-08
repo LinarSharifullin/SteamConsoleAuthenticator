@@ -59,7 +59,7 @@ def check_account_sessions(accounts, flag_mode=False):
         try:
             account.steam_client.load_session(account.session)
             print(f'Account {account.username} session restored')
-        except SessionIsInvalid:
+        except (SessionIsInvalid, KeyError):
             print(f'Saved session account {account.username} is invalid,',
                   'we login again...')
             account_login_router(account, flag_mode)
